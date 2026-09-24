@@ -19,6 +19,10 @@ omarchy plugin update npittas.omanager
 omarchy plugin remove npittas.omanager
 ```
 
+## Requirements and license
+
+Requires Omarchy Shell with plugin support, Hyprland, and Python 3. It has no additional Python package dependencies. Licensed under MIT; see [LICENSE](LICENSE).
+
 ## Use
 
 Open Omanager from the bar, select an app, and choose a live window to identify it safely. Save writes app settings to `~/.config/omarchy/omanager.json` and generates Hyprland rules in `~/.config/hypr/omanager.lua`. Rules apply to newly opened matching windows. Omanager does not modify app launchers or Ghostty startup.
