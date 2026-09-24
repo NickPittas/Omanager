@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "id": "npittas.omanager",
+  "name": "Omanager",
+  "version": "0.3.0",
+  "author": "npittas",
+  "license": "MIT",
+  "description": "Configure per-application layout, window state, workspace, and floating behavior from a native Omarchy panel.",
+  "kinds": ["bar-widget"],
+  "entryPoints": {
+    "barWidget": "Panel.qml"
+  },
+  "barWidget": {
+    "displayName": "Omanager",
+    "description": "Search installed apps, choose a running window, and set its opening layout.",
+    "category": "System",
+    "aliases": ["app-window-manager", "floating-apps"],
+    "allowMultiple": false,
+    "defaultSection": "left"
+  }
+}
