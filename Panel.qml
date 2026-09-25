@@ -76,7 +76,7 @@ Panel {
   readonly property bool workspaceValid: draftWorkspace.trim() === ""
     || /^(?:[1-9][0-9]{0,3}|[A-Za-z][A-Za-z0-9_.:-]{0,63})$/.test(draftWorkspace.trim())
   readonly property bool canSave: !!selectedApp && !saving && sizeValid && positionValid && workspaceValid
-    && (!hasRuleOptions || (!!draftClass && targetAvailable && !terminalTarget))
+    && (!hasRuleOptions || (!!draftClass.trim() && !terminalTarget))
 
   function resolvedPath(relativePath) {
     var value = String(Qt.resolvedUrl(relativePath))
@@ -258,8 +258,8 @@ Panel {
       statusMessage = "This selection would configure the terminal, not the app inside it."
       return
     }
-    if (hasRuleOptions && (!draftClass || !targetAvailable)) {
-      statusMessage = "Launch the app and pick its actual window before applying a rule."
+    if (hasRuleOptions && !draftClass.trim()) {
+      statusMessage = "Pick a running window or enter its window class before applying a rule."
       return
     }
     if (!sizeValid || !positionValid || !workspaceValid) {
@@ -679,6 +679,14 @@ Panel {
                   }
                 }
 
+                TextField {
+                  width: parent.width
+                  height: Style.space(38)
+                  placeholderText: "Window class (or pick a running window above)"
+                  text: root.draftClass
+                  onTextEdited: { root.draftClass = text; root.draftInitialTitle = ""; root.pickedAddress = ""; root.statusMessage = "" }
+                }
+
                 PanelSeparator { foreground: root.foreground }
                 PanelSectionHeader { text: "Start state"; foreground: root.foreground }
                 Row {
@@ -861,7 +869,7 @@ Panel {
                   visible: root.draftMode === "floating" && !root.targetAvailable && !root.terminalTarget
                   width: parent.width
                   textFormat: Text.PlainText
-                  text: "This saved target is not verified against an app class or open window. Launch the app and pick its actual window to repair the rule."
+                  text: "Window class not verified. Pick the app's running window for an exact match, or enter its class manually."
                   color: root.urgent
                   font.family: Style.font.family
                   font.pixelSize: Style.font.bodySmall

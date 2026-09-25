@@ -16,6 +16,7 @@ from pathlib import Path
 
 CONFIG = Path.home() / ".config/omarchy/omanager.json"
 HYPR_CONFIG = Path.home() / ".config/hypr/omanager.lua"
+HYPR_MAIN = Path.home() / ".config/hypr/hyprland.lua"
 
 
 @dataclass(frozen=True)
@@ -206,10 +207,22 @@ def render_lua(settings: dict) -> str:
     return "\n".join(lines) + "\n"
 
 
+def enable_rules() -> None:
+    if not HYPR_MAIN.is_file():
+        raise ValueError(f"Hyprland config not found: {HYPR_MAIN}")
+    content = HYPR_MAIN.read_text(encoding="utf-8")
+    if re.search(r"(?m)^\s*require\s*\(\s*['\"]hypr\.omanager['\"]\s*\)", content):
+        return
+    # ponytail: enable on first save rather than adding a plugin install hook.
+    with HYPR_MAIN.open("a", encoding="utf-8") as file:
+        file.write(("\n" if content and not content.endswith("\n") else "") + 'require("hypr.omanager")\n')
+
+
 def save_settings(settings: dict) -> None:
     lua = render_lua(settings)
-    atomic_write(CONFIG, json.dumps(settings, ensure_ascii=False, indent=2) + "\n")
     atomic_write(HYPR_CONFIG, lua)
+    enable_rules()
+    atomic_write(CONFIG, json.dumps(settings, ensure_ascii=False, indent=2) + "\n")
 
 
 def list_apps() -> dict:

@@ -25,7 +25,7 @@ Requires Omarchy Shell with plugin support, Hyprland, and Python 3. It has no ad
 
 ## Use
 
-Open Omanager from the bar, select an app, and choose a live window to identify it safely. Save writes app settings to `~/.config/omarchy/omanager.json` and generates Hyprland rules in `~/.config/hypr/omanager.lua`. Rules apply to newly opened matching windows. Omanager does not modify app launchers or Ghostty startup.
+Open Omanager from the bar, select an app, and choose a live window to identify it safely (or enter its window class manually if it is not running). Save writes app settings to `~/.config/omarchy/omanager.json`, generates Hyprland rules in `~/.config/hypr/omanager.lua`, and adds `require("hypr.omanager")` to `~/.config/hypr/hyprland.lua` on first save. Rules apply to newly opened matching windows. Omanager does not modify app launchers or Ghostty startup.
 
 Workspace placement can be silent (keep the current workspace active) or switch to the assigned workspace. Size and position are monitor-local pixels.
 

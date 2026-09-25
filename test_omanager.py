@@ -1,11 +1,24 @@
 import tempfile
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 
+import omanager
 from omanager import class_regex, discover_apps, render_lua
 
 
 class OmanagerTests(unittest.TestCase):
+    def test_save_enables_rules_once_without_clobbering_config(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            main = root / "hyprland.lua"
+            main.write_text("-- personal config (no final newline)", encoding="utf-8")
+            with patch.object(omanager, "HYPR_MAIN", main), patch.object(omanager, "HYPR_CONFIG", root / "omanager.lua"), patch.object(omanager, "CONFIG", root / "settings.json"):
+                omanager.save_settings({"apps": {"demo.desktop": {"class": "demo", "mode": "floating"}}})
+                omanager.save_settings({"apps": {"demo.desktop": {"class": "demo", "mode": "floating"}}})
+                self.assertEqual(main.read_text(encoding="utf-8"), '-- personal config (no final newline)\nrequire("hypr.omanager")\n')
+                self.assertIn("float = true", (root / "omanager.lua").read_text(encoding="utf-8"))
+
     def test_discovery_respects_precedence_and_hidden_entries(self):
         with tempfile.TemporaryDirectory() as temporary:
             user = Path(temporary) / "user"
